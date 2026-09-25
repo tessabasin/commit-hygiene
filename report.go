@@ -7,18 +7,17 @@ import (
 	"strings"
 )
 
-const maxSubjectLen = 50
-
 type Report struct {
 	Total          int
 	ByAuthor       map[string]int
+	MaxSubjectLen  int
 	OverLength     int
 	TrailingPeriod int
 	Empty          int
 }
 
-func buildReport(commits []Commit) Report {
-	r := Report{ByAuthor: make(map[string]int)}
+func buildReport(commits []Commit, maxSubjectLen int) Report {
+	r := Report{ByAuthor: make(map[string]int), MaxSubjectLen: maxSubjectLen}
 	r.Total = len(commits)
 
 	for _, c := range commits {
@@ -43,7 +42,7 @@ func buildReport(commits []Commit) Report {
 func (r Report) print(w io.Writer) {
 	fmt.Fprintf(w, "commits analyzed:    %d\n", r.Total)
 	fmt.Fprintf(w, "empty subject:       %d\n", r.Empty)
-	fmt.Fprintf(w, "subject > %d chars: %d\n", maxSubjectLen, r.OverLength)
+	fmt.Fprintf(w, "subject > %d chars: %d\n", r.MaxSubjectLen, r.OverLength)
 	fmt.Fprintf(w, "subject ends in '.': %d\n", r.TrailingPeriod)
 
 	type authorCount struct {

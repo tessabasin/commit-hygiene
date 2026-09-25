@@ -26,6 +26,12 @@ git log --format='%H%x1f%an%x1f%ae%x1f%aI%x1f%s%x1f%b%x1e' > history.log
 commit-hygiene history.log
 ```
 
+The subject-length threshold defaults to 50 characters and can be overridden:
+
+```
+commit-hygiene -max-subject-len 72 history.log
+```
+
 Sample output:
 
 ```

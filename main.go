@@ -1,19 +1,32 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 )
 
 func main() {
-	if len(os.Args) > 2 {
-		fmt.Fprintln(os.Stderr, "usage: commit-hygiene [logfile]")
+	maxSubjectLen := flag.Int("max-subject-len", 50, "flag subject lines longer than this many characters")
+	flag.Usage = func() {
+		fmt.Fprintln(os.Stderr, "usage: commit-hygiene [-max-subject-len N] [logfile]")
+		flag.PrintDefaults()
+	}
+	flag.Parse()
+
+	args := flag.Args()
+	if len(args) > 1 {
+		flag.Usage()
+		os.Exit(2)
+	}
+	if *maxSubjectLen < 1 {
+		fmt.Fprintln(os.Stderr, "commit-hygiene: -max-subject-len must be at least 1")
 		os.Exit(2)
 	}
 
 	input := os.Stdin
-	if len(os.Args) == 2 {
-		f, err := os.Open(os.Args[1])
+	if len(args) == 1 {
+		f, err := os.Open(args[0])
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "commit-hygiene: %v\n", err)
 			os.Exit(1)
@@ -32,5 +45,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	buildReport(commits).print(os.Stdout)
+	buildReport(commits, *maxSubjectLen).print(os.Stdout)
 }
