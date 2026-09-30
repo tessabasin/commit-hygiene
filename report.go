@@ -13,6 +13,7 @@ type Report struct {
 	MaxSubjectLen  int
 	OverLength     int
 	TrailingPeriod int
+	NonImperative  int
 	Empty          int
 }
 
@@ -34,6 +35,9 @@ func buildReport(commits []Commit, maxSubjectLen int) Report {
 		if strings.HasSuffix(subject, ".") {
 			r.TrailingPeriod++
 		}
+		if isNonImperative(subject) {
+			r.NonImperative++
+		}
 	}
 
 	return r
@@ -44,6 +48,7 @@ func (r Report) print(w io.Writer) {
 	fmt.Fprintf(w, "empty subject:       %d\n", r.Empty)
 	fmt.Fprintf(w, "subject > %d chars: %d\n", r.MaxSubjectLen, r.OverLength)
 	fmt.Fprintf(w, "subject ends in '.': %d\n", r.TrailingPeriod)
+	fmt.Fprintf(w, "not imperative:      %d\n", r.NonImperative)
 
 	type authorCount struct {
 		name  string

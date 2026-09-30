@@ -39,6 +39,7 @@ commits analyzed:    842
 empty subject:       0
 subject > 50 chars: 61
 subject ends in '.': 12
+not imperative:      37
 
 authors (7):
    401  Jamie Ostrander
@@ -66,5 +67,8 @@ No third-party dependencies - standard library only.
 ## Status
 
 Early. Currently reports subject-line length, trailing-period style, empty
-messages, and a per-author commit count. See the issue tracker for what's
+messages, non-imperative subjects, and a per-author commit count. The
+imperative check is a heuristic on the first word: it flags past tense
+("Fixed"), gerunds ("Fixing") and third-person forms of common verbs
+("Fixes"), and would rather miss a case than flag a good subject. See the issue tracker for what's
 planned next.
